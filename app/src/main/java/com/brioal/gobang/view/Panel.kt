@@ -34,20 +34,26 @@ class Panel @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = 
             : MutableList<Point>? = null
     private var isWhite = false // 存储是否是白子 , 默认黑子先行
     private var isGameOver = false // 存储游戏是否已经结束
-    private var onGameListener // 供外部调用的接口参数
-            : onGameListener? = null
+//    private var onGameListener // 供外部调用的接口参数
+//            : onGameListener? = null
     var under // 组件的底部的位置 , 用于确定Dialog的显示文职
             = 0
         private set
+//
+//    interface onGameListener {
+//        // 用于回调的接口
+//        fun onGameOVer(i: Int)
+//    }
 
-    interface onGameListener {
-        // 用于回调的接口
-        fun onGameOVer(i: Int)
-    }
+    private var onGameListener: ((View) -> Unit)? = null
 
-    fun setOnGameListener(onGameListener: onGameListener?) {
+    fun setOnGameListener(onGameListener: (View) -> Unit) {
         this.onGameListener = onGameListener
     }
+
+//    fun setOnGameListener(onGameListener: onGameListener?) {
+//        this.onGameListener = onGameListener
+//    }
 
     //重新开始游戏
     fun reStartGame() {
@@ -81,7 +87,7 @@ class Panel @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = 
         if (whiteWin || blackWin) {
             isGameOver = true
             if (onGameListener != null) {
-                onGameListener!!.onGameOVer(if (whiteWin) WHITE_WIN else BLACK_WIN)
+                if (whiteWin) WHITE_WIN else BLACK_WIN
             }
         }
     }
@@ -329,8 +335,8 @@ class Panel @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = 
 
     companion object {
         private const val TAG = "PanelInfo"
-        var WHITE_WIN = 0 //白子胜利的标志
-        var BLACK_WIN = 1 // 黑子胜利的标志
+        var WHITE_WIN = false //白子胜利的标志
+        var BLACK_WIN = true // 黑子胜利的标志
     }
 
     init {

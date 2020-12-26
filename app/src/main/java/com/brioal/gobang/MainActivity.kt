@@ -6,7 +6,6 @@ import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.brioal.gobang.view.Panel
-import com.brioal.gobang.view.Panel.onGameListener
 
 class MainActivity : AppCompatActivity() {
     private var panel // 棋盘VIew
@@ -28,13 +27,12 @@ class MainActivity : AppCompatActivity() {
             panel!!.reStartGame()
         }
         panel = findViewById<View>(R.id.main_panel) as Panel
-        panel!!.setOnGameListener(object : onGameListener {
-            override fun onGameOVer(i: Int) { // 设置监听器
+        panel!!.setOnGameListener{ // 设置监听器
                 var text = ""
-                if (i == Panel.WHITE_WIN) {
+                if (Panel.WHITE_WIN) {
                     //白子胜利
                     text = "白子胜利"
-                } else if (i == Panel.BLACK_WIN) {
+                } else if (Panel.BLACK_WIN) {
                     //黑子胜利
                     text = "黑子胜利"
                 }
@@ -48,7 +46,6 @@ class MainActivity : AppCompatActivity() {
                 dialogWindow!!.attributes = params // 设置新的LayoutParams
                 dialog.setCanceledOnTouchOutside(false) // 设置点击外部不取消
                 dialog.show() // 显示Dialog
-            }
-        })
+        }
     }
 }
