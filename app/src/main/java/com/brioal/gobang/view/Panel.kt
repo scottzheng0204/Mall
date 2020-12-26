@@ -34,7 +34,8 @@ class Panel @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = 
             : MutableList<Point>? = null
     private var isWhite = false // 存储是否是白子 , 默认黑子先行
     private var isGameOver = false // 存储游戏是否已经结束
-    private var onGameListener: onGameListener? = null
+    private var onGameListener // 供外部调用的接口参数
+            : onGameListener? = null
     var under // 组件的底部的位置 , 用于确定Dialog的显示文职
             = 0
         private set
@@ -256,8 +257,8 @@ class Panel @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = 
         lineHeight = panleWidth * 1.0f / MAX_LINE // 获取格子的高度 10行,则直线有10条 ,格子只有9个
         offset = (lineHeight / 2).toInt()
         pieceWidth = (lineHeight * 3 / 4).toInt() // 棋子的高度为格子高度的3/4
-        mWhite = mWhite?.let { Bitmap.createScaledBitmap(it, pieceWidth, pieceWidth, false) } // 根据棋子宽度进行缩放~~~~~~~~~~~~~
-        mBlack = mBlack?.let { Bitmap.createScaledBitmap(it, pieceWidth, pieceWidth, false) } //根据棋子宽度进行缩放~~~~~~~~~~~~~~
+        mWhite = Bitmap.createScaledBitmap(mWhite!!, pieceWidth, pieceWidth, false) // 根据棋子宽度进行缩放
+        mBlack = Bitmap.createScaledBitmap(mBlack!!, pieceWidth, pieceWidth, false) //根据棋子宽度进行缩放
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -304,13 +305,13 @@ class Panel @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = 
         checkGameOver()
     }
 
-    //绘制棋子~~~~~~~~~~~~~~~~~~~~~
+    //绘制棋子
     private fun drawPoints(canvas: Canvas) {
         for (point in mWhites!!) {
-            mWhite?.let { canvas.drawBitmap(it, offset + point.x * lineHeight - pieceWidth / 2, offset + point.y * lineHeight - pieceWidth / 2, mPaint_point) }
+            canvas.drawBitmap(mWhite!!, offset + point.x * lineHeight - pieceWidth / 2, offset + point.y * lineHeight - pieceWidth / 2, mPaint_point)
         }
         for (point in mBlacks!!) {
-            mBlack?.let { canvas.drawBitmap(it, offset + point.x * lineHeight - pieceWidth / 2, offset + point.y * lineHeight - pieceWidth / 2, mPaint_point) }
+            canvas.drawBitmap(mBlack!!, offset + point.x * lineHeight - pieceWidth / 2, offset + point.y * lineHeight - pieceWidth / 2, mPaint_point)
         }
     }
 
@@ -321,8 +322,8 @@ class Panel @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = 
         for (i in 0 until MAX_LINE) {
             val start_y = i * lineHeight + offset // 起始的y坐标
             val end_y = i * lineHeight + offset // 终止的y坐标
-            mPaint?.let { canvas.drawLine(start_x.toFloat(), start_y, end_x.toFloat(), end_y, it) } // 绘制横向的~~~~~~~~~~~~~~~~~~~~
-            mPaint?.let { canvas.drawLine(start_y, start_x.toFloat(), end_y, end_x.toFloat(), it) } // 纵向只需要把 横向的xy交换就行~~~~~~~~~~~~~~~~~~~~
+            canvas.drawLine(start_x.toFloat(), start_y, end_x.toFloat(), end_y, mPaint!!) // 绘制横向的
+            canvas.drawLine(start_y, start_x.toFloat(), end_y, end_x.toFloat(), mPaint!!) // 纵向只需要把 横向的xy交换就行
         }
     }
 
